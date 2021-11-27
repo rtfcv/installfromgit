@@ -38,10 +38,12 @@ for i in packagedata.index:
 
     _download_index = assets.name.str.match(_dl_regex)
 
-    if len(assets[_download_index].browser_download_url) > 1:
-        print(f'You have to reconsider the regex for specifying \
-              the asset file you would like to install for \
-              package: {_project}')
+    if len(assets[_download_index].browser_download_url) != 1:
+        print(f'## WARNING ##')
+        print(f'You have to reconsider the regex for specifying')
+        print(f'the asset file you would like to install for')
+        print(f'package: {_project}')
+        print(f'##')
         continue
 
     for _url in assets[_download_index].browser_download_url:
@@ -62,17 +64,22 @@ for i in packagedata.index:
         _PLATFORM = platform.system()
         if (_PLATFORM == 'Windows'):
             print('Windows')
+
         elif (_PLATFORM == 'Linux'):
             print('Linux')
             print(f'downloading from {_url}')
+
+            # if the url ended with deb
             _data = urllib.request.urlopen(_url)
             with io.open("/tmp/temp.deb", "wb") as file:
                 file.write(_data.read())
             subprocess.check_call(['sudo', 'apt', 'install', '/tmp/temp.deb'])
+            # if the url ended with tar.gz
 
             # do below on success
             packagedata.prev_url[i] = _url
             packagedata.to_csv(pkgdatafile, index=False)
+
         else:
             print('Unknown Platform')
 

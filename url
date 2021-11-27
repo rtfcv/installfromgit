@@ -1,0 +1,2 @@
+reponame=PowerShell/PowerShell
+curl "https://api.github.com/repos/${reponame}/releases/latest"
